@@ -1,0 +1,26 @@
+- name: Bootstrap dev environment
+  hosts: localhost
+
+  tasks:
+  - name: Install software-properties-common
+    become: yes
+    ansible.builtin.apt:
+      name: software-properties-common
+      state: present
+
+  - name: Add Neovim PPA repository
+    become: yes
+    ansible.builtin.apt_repository:
+      repo: 'ppa:neovim-ppa/stable'
+      state: present
+  - name: Install packages with apt
+    become: yes
+    ansible.builtin.apt:
+      name:
+        - git
+        - tmux
+        - neovim
+      state: latest
+
+  roles:
+    - nvim
