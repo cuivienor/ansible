@@ -1,7 +1,7 @@
 - name: Clone nvim repository
   git:
     repo: https://github.com/neovim/neovim
-
+    force: true
     dest: "{{ ansible_env.HOME }}/src/nvim"
     clone: true
     version: "v0.9.5"

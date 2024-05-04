@@ -13,8 +13,8 @@
       name:
         - software-properties-common
         - git
-        - tmux
       state: latest
 
   roles:
     - nvim
+    - tmux

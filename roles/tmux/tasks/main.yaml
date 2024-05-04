@@ -1,0 +1,27 @@
+- name: Install tmux build dependencies
+  become: true
+  apt:
+    name:
+      - libevent-dev
+      - ncurses-dev
+      - build-essential
+      - bison
+      - pkg-config
+    state: present    
+
+- name: Clone tmux source
+  git:
+    repo: https://github.com/tmux/tmux.git
+    dest: "{{ ansible_env.HOME }}/src/tmux"
+    clone: true
+    version: "3.4"
+
+- name: Install tmux
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sh autogen.sh
+      ./configure
+      make
+      make install
+    chdir: "{{ ansible_env.HOME }}/src/tmux"
