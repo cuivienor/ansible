@@ -32,8 +32,25 @@
     dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
     depth: 1
  
+- name: Install catppuccin theme for syntax highlighting
+  ansible.builtin.git:
+    repo: https://github.com/catppuccin/zsh-syntax-highlighting.git
+    dest: "{{ ansible_env.HOME }}/src/zsh-syntax-highlighting"
+    depth: 1
+
+- name: Move highlighting theme in the right location
+  ansible.builtin.shell:
+    cmd: cp catppuccin_mocha-zsh-syntax-highlighting.zsh ~/.zsh/
+    chdir: "{{ ansible_env.HOME }}/src/zsh-syntax-highlighting/themes"
+
+- name: Move custom prompt file managed in dotfiles to custom theme location
+  ansible.builtin.shell:
+    cmd: cp "{{ ansible_env.HOME }}/.zsh/catppuccin.zsh-theme" "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes/"
+    chdir: "{{ ansible_env.HOME }}"
+
 - name: Change user shell to zsh 
   become: true
   ansible.builtin.user:
     name: "{{ ansible_user_id }}"
     shell: /bin/zsh
+
