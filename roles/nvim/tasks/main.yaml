@@ -24,7 +24,7 @@
       - unzip
       - curl
     state: present
-    
+ 
 - name: Configure build dependencies for Neovim
   become: true
 
@@ -44,13 +44,10 @@
   ansible.builtin.shell:
     cmd: cmake -S . -B build -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Release
     chdir: "{{ ansible_env.HOME }}/src/nvim"
-
     creates: "{{ ansible_env.HOME }}/src/nvim/build/Makefile"
-
 
 - name: Build and install nvim
   become: true
   community.general.make:
     chdir: "{{ ansible_env.HOME }}/src/nvim/build"
     target: install
-
