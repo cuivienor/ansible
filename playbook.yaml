@@ -10,7 +10,7 @@
   - name: Install packages with apt
     become: yes
     ansible.builtin.apt:
-      name:
+      name: 
         - software-properties-common
         - git
       state: latest
