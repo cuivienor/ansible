@@ -1,22 +1,20 @@
+---
 - name: Check if zoxide is installed
   ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/.local/bin/zoxide"
+    path: '{{ ansible_env.HOME }}/.local/bin/zoxide'
   register: zoxide_installed
-
 - name: Download zoxide installer script
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh
     dest: /tmp/install_zoxide.sh
-    mode: 'u+x,g+x'
+    mode: u+x,g+x
   when: not zoxide_installed.stat.exists
-
 - name: Execute zoxide installer script
   ansible.builtin.command:
-    cmd: "sh /tmp/install_zoxide.sh"
+    cmd: sh /tmp/install_zoxide.sh
   args:
-    creates: "{{ ansible_env.HOME }}/.local/bin/zoxide"
+    creates: '{{ ansible_env.HOME }}/.local/bin/zoxide'
   when: not zoxide_installed.stat.exists
-
 - name: Remove zoxide installer script
   ansible.builtin.file:
     path: /tmp/install_zoxide.sh

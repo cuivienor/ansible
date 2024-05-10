@@ -1,12 +1,11 @@
+---
 - name: Clone nvim repository
   ansible.builtin.git:
     repo: https://github.com/neovim/neovim
     force: true
-    dest: "{{ ansible_env.HOME }}/src/nvim"
+    dest: '{{ ansible_env.HOME }}/src/nvim'
     clone: true
-    version: "v0.9.5"
-
-
+    version: v0.9.5
 - name: Install nvim build dependencies
   become: true
   ansible.builtin.apt:
@@ -24,29 +23,24 @@
       - unzip
       - curl
     state: present
-
 - name: Configure build dependencies for Neovim
   become: true
   ansible.builtin.shell:
     cmd: cmake -S cmake.deps -B .deps -G Ninja -D CMAKE_BUILD_TYPE=Release
-    chdir: "{{ ansible_env.HOME }}/src/nvim"
-
-
+    chdir: '{{ ansible_env.HOME }}/src/nvim'
 - name: Build dependencies for Neovim
   become: true
   ansible.builtin.shell:
     cmd: cmake --build .deps
-    chdir: "{{ ansible_env.HOME }}/src/nvim"
-
+    chdir: '{{ ansible_env.HOME }}/src/nvim'
 - name: Prepare build configuration
   become: true
   ansible.builtin.shell:
     cmd: cmake -S . -B build -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Release
-    chdir: "{{ ansible_env.HOME }}/src/nvim"
-    creates: "{{ ansible_env.HOME }}/src/nvim/build/Makefile"
-
+    chdir: '{{ ansible_env.HOME }}/src/nvim'
+    creates: '{{ ansible_env.HOME }}/src/nvim/build/Makefile'
 - name: Build and install nvim
   become: true
   community.general.make:
-    chdir: "{{ ansible_env.HOME }}/src/nvim/build"
+    chdir: '{{ ansible_env.HOME }}/src/nvim/build'
     target: install
