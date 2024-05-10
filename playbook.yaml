@@ -3,12 +3,12 @@
 
   tasks:
   - name: Install software-properties-common
-    become: yes
+    become: true
     ansible.builtin.apt:
       state: present
 
   - name: Install packages with apt
-    become: yes
+    become: true
     ansible.builtin.apt:
       name: 
         - software-properties-common

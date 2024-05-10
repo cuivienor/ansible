@@ -1,16 +1,16 @@
 - name: Install tmux build dependencies
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - libevent-dev
       - ncurses-dev
       - build-essential
       - bison
       - pkg-config
-    state: present    
+    state: present
 
 - name: Clone tmux source
-  git:
+  ansible.builtin.git:
     repo: https://github.com/tmux/tmux.git
     dest: "{{ ansible_env.HOME }}/src/tmux"
     clone: true
@@ -27,6 +27,6 @@
     chdir: "{{ ansible_env.HOME }}/src/tmux"
 
 - name: Install tmux tpm plugin
-  git:
+  ansible.builtin.git:
     repo: https://github.com/tmux-plugins/tpm
     dest: "{{ ansible_env.HOME }}/.config/tmux/plugins/tpm"
