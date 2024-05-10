@@ -24,10 +24,9 @@
       - unzip
       - curl
     state: present
- 
+
 - name: Configure build dependencies for Neovim
   become: true
-
   ansible.builtin.shell:
     cmd: cmake -S cmake.deps -B .deps -G Ninja -D CMAKE_BUILD_TYPE=Release
     chdir: "{{ ansible_env.HOME }}/src/nvim"
