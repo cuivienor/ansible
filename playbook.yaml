@@ -13,6 +13,8 @@
       name: 
         - software-properties-common
         - git
+        - bat
+        - ripgrep
       state: latest
 
   roles:
