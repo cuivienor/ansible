@@ -35,7 +35,7 @@
     depth: 1
     version: main
 - name: Move highlighting theme in the right location
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: cp catppuccin_mocha-zsh-syntax-highlighting.zsh ~/.config/zsh/
     chdir: '{{ ansible_env.HOME }}/src/zsh-syntax-highlighting/themes'
 - name: Change user shell to zsh

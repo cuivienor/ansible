@@ -25,17 +25,17 @@
     state: present
 - name: Configure build dependencies for Neovim
   become: true
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: cmake -S cmake.deps -B .deps -G Ninja -D CMAKE_BUILD_TYPE=Release
     chdir: '{{ ansible_env.HOME }}/src/nvim'
 - name: Build dependencies for Neovim
   become: true
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: cmake --build .deps
     chdir: '{{ ansible_env.HOME }}/src/nvim'
 - name: Prepare build configuration
   become: true
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: cmake -S . -B build -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Release
     chdir: '{{ ansible_env.HOME }}/src/nvim'
     creates: '{{ ansible_env.HOME }}/src/nvim/build/Makefile'

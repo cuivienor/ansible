@@ -1,3 +1,4 @@
+---
 - name: Install tmux build dependencies
   become: true
   ansible.builtin.apt:
@@ -8,14 +9,12 @@
       - bison
       - pkg-config
     state: present
-
 - name: Clone tmux source
   ansible.builtin.git:
     repo: https://github.com/tmux/tmux.git
-    dest: "{{ ansible_env.HOME }}/src/tmux"
+    dest: '{{ ansible_env.HOME }}/src/tmux'
     clone: true
-    version: "3.4"
-
+    version: '3.4'
 - name: Install tmux
   become: true
   ansible.builtin.shell:
@@ -24,12 +23,11 @@
       ./configure
       make
       make install
-    chdir: "{{ ansible_env.HOME }}/src/tmux"
-
+    chdir: '{{ ansible_env.HOME }}/src/tmux'
 - name: Install tmux tpm plugin
   ansible.builtin.git:
     repo: https://github.com/tmux-plugins/tpm
-    dest: "{{ ansible_env.HOME }}/.config/tmux/plugins/tpm"
+    dest: '{{ ansible_env.HOME }}/.config/tmux/plugins/tpm'
     update: true
     force: true
     version: master
