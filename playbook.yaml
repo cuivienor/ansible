@@ -9,6 +9,6 @@
     - name: Install packages with apt
       become: true
       ansible.builtin.apt:
-        name: [software-properties-common, git, bat, ripgrep]
+        name: [software-properties-common, git, bat, fzf, ripgrep]
         state: latest
   roles: [nvim, tmux, shell, zoxide]
