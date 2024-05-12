@@ -23,22 +23,28 @@
       - unzip
       - curl
     state: present
+- name: Create directory if it doesn't exist
+  ansible.builtin.file:
+    path: '{{ ansible_env.HOME }}/build/nvim'
+    state: directory
 - name: Configure build dependencies for Neovim
   become: true
   ansible.builtin.command:
-    cmd: cmake -S cmake.deps -B .deps -G Ninja -D CMAKE_BUILD_TYPE=Release
+    cmd: cmake -S cmake.deps -B {{ ansible_env.HOME }}/build/nvim/.deps -G Ninja
+      -D CMAKE_BUILD_TYPE=Release
     chdir: '{{ ansible_env.HOME }}/src/nvim'
 - name: Build dependencies for Neovim
   become: true
   ansible.builtin.command:
-    cmd: cmake --build .deps
+    cmd: cmake --build {{ ansible_env.HOME }}/build/nvim/.deps
     chdir: '{{ ansible_env.HOME }}/src/nvim'
 - name: Prepare build configuration
   become: true
   ansible.builtin.command:
-    cmd: cmake -S . -B build -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Release
+    cmd: cmake -S . -B {{ ansible_env.HOME }}/build/nvim/build -G 'Unix Makefiles'
+      -DCMAKE_BUILD_TYPE=Release
     chdir: '{{ ansible_env.HOME }}/src/nvim'
-    creates: '{{ ansible_env.HOME }}/src/nvim/build/Makefile'
+    creates: '{{ ansible_env.HOME }}/build/nvim/build/Makefile'
 - name: Build and install nvim
   become: true
   community.general.make:
