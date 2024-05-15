@@ -1,33 +1,47 @@
 ---
-- name: Install tmux build dependencies
-  become: true
-  ansible.builtin.apt:
-    name:
-      - libevent-dev
-      - ncurses-dev
-      - build-essential
-      - bison
-      - pkg-config
-    state: present
-- name: Clone tmux source
-  ansible.builtin.git:
-    repo: https://github.com/tmux/tmux.git
-    dest: '{{ ansible_env.HOME }}/src/tmux'
-    clone: true
-    version: '3.4'
-- name: Install tmux
-  become: true
-  ansible.builtin.shell:
-    cmd: |
-      sh autogen.sh
-      ./configure
-      make
-      make install
-    chdir: '{{ ansible_env.HOME }}/src/tmux'
-- name: Install tmux tpm plugin
-  ansible.builtin.git:
-    repo: https://github.com/tmux-plugins/tpm
-    dest: '{{ ansible_env.HOME }}/.config/tmux/plugins/tpm'
-    update: true
-    force: true
-    version: master
+- name: Check for tmux installation
+  ansible.builtin.command:
+    argv: [tmux, -V]
+  register: tmux_version
+  changed_when: false
+- name: Install tmux from source
+  when: "'3.4' not in tmux_version.stdout"
+  block:
+    - name: Install tmux build dependencies
+      become: true
+      ansible.builtin.apt:
+        name:
+          - libevent-dev
+          - ncurses-dev
+          - build-essential
+          - bison
+          - pkg-config
+        state: present
+    - name: Clone tmux source
+      ansible.builtin.git:
+        repo: https://github.com/tmux/tmux.git
+        dest: '{{ ansible_env.HOME }}/src/tmux'
+        clone: true
+        version: '3.4'
+    - name: Generate tmux build configuration
+      ansible.builtin.command:
+        chdir: '{{ ansible_env.HOME }}/src/tmux'
+        argv: [./autogen.sh]
+        creates: '{{ ansible_env.HOME }}/src/tmux/configure'
+    - name: Configure tmux build
+      ansible.builtin.command:
+        chdir: '{{ ansible_env.HOME }}/src/tmux'
+        argv: [./configure]
+        creates: '{{ ansible_env.HOME }}/src/tmux/Makefile'
+    - name: Build tmux
+      become: true
+      community.general.make:
+        chdir: '{{ ansible_env.HOME }}/src/tmux'
+        target: install
+    - name: Install tmux tpm plugin
+      ansible.builtin.git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: '{{ ansible_env.HOME }}/.config/tmux/plugins/tpm'
+        update: true
+        force: true
+        version: master
