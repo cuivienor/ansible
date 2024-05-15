@@ -5,6 +5,7 @@
   register: nvim_version
   changed_when: false
 - name: Install nvim from source
+  when: "'v0.9.5' not in nvim_version.stdout"
   block:
     - name: Clone nvim repository
       ansible.builtin.git:
@@ -41,11 +42,13 @@
         cmd: cmake -S cmake.deps -B {{ ansible_env.HOME }}/build/nvim/.deps -G Ninja
           -D CMAKE_BUILD_TYPE=Release
         chdir: '{{ ansible_env.HOME }}/src/nvim'
+        creates: '{{ ansible_env.HOME }}/build/nvim/.deps/CMakeCache.txt'
     - name: Build dependencies for Neovim
       become: true
       ansible.builtin.command:
         cmd: cmake --build {{ ansible_env.HOME }}/build/nvim/.deps
         chdir: '{{ ansible_env.HOME }}/src/nvim'
+        creates: '{{ ansible_env.HOME }}/build/nvim/.deps/usr/lib'
     - name: Prepare build configuration
       become: true
       ansible.builtin.command:
@@ -58,4 +61,3 @@
       community.general.make:
         chdir: '{{ ansible_env.HOME }}/src/nvim/build'
         target: install
-  when: "'v0.9.5' not in nvim_version.stdout"
