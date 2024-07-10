@@ -5,6 +5,14 @@
     - name: Install packages with apt
       become: true
       ansible.builtin.apt:
-        name: [software-properties-common, git, bat, fzf, ripgrep, stow]
+        update-cache: true
+        name:
+          - software-properties-common
+          - git
+          - bat
+          - fzf
+          - python3-debian
+          - ripgrep
+          - stow
         state: latest
-  roles: [nvim, tmux, shell, zoxide, tldr]
+  roles: [nvim, tmux, shell, terraform, zoxide, tldr]
