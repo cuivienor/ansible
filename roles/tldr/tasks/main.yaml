@@ -1,0 +1,15 @@
+---
+- name: Check latest tldr release
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/tldr-pages/tlrc/releases/latest
+    return_content: true
+  register: tldr_latest
+- name: Install tldr {{ tldr_latest.json.tag_name }}
+  loop: '{{ tldr_latest.json.assets }}'
+  when: "'x86_64-unknown-linux-gnu.tar.gz' in item.name"
+  ansible.builtin.unarchive:
+    remote_src: true
+    src: '{{ item.browser_download_url }}'
+    dest: '{{ ansible_env.HOME }}/.local/bin/'
+    keep_newer: true
+    extra_opts: [--strip=1, --no-anchored, tldr]

@@ -2,13 +2,9 @@
 - name: Bootstrap dev environment
   hosts: localhost
   tasks:
-    - name: Install software-properties-common
-      become: true
-      ansible.builtin.apt:
-        state: present
     - name: Install packages with apt
       become: true
       ansible.builtin.apt:
-        name: [software-properties-common, git, bat, fzf, ripgrep]
+        name: [software-properties-common, git, bat, fzf, ripgrep, stow]
         state: latest
-  roles: [nvim, tmux, shell, zoxide]
+  roles: [nvim, tmux, shell, zoxide, tldr]
